@@ -1,0 +1,1 @@
+Familiarize with project struucture
