@@ -14,10 +14,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 import os
 from django.conf import settings
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import permission_required
-from .models import Book
-from .forms import BookForm  # Assuming a BookForm exists
+
 
 def list_books(request):
     books = Book.objects.all()
@@ -28,6 +25,16 @@ class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
+
+class LibrarianView(LibrarianView):
+    model = Librarian
+    template_name = 'relationship_app/librarian_view.html'
+    context_object_name = 'librarian'
+
+class AdminView(AdminView):
+    model = Admin
+    template_name = 'relationship_app/admin_view.html'
+    context_object_name = 'admin'
 
 class BookListView(ListView):
     model = Book
