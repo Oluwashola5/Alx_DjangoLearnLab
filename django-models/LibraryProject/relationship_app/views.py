@@ -14,6 +14,10 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 import os
 from django.conf import settings
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import permission_required
+from .models import Book
+from .forms import BookForm  # Assuming a BookForm exists
 
 def list_books(request):
     books = Book.objects.all()
@@ -130,3 +134,38 @@ def is_admin(user):
 def admin_view(request):
     """View restricted to Admin users."""
     return render(request, 'admin_view.html')
+
+
+# Create a book (Only for users with 'can_add_book' permission)
+@permission_required('relationship_app.can_add_book', raise_exception=True)
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books')  # Redirect to book list
+    else:
+        form = BookForm()
+    return render(request, 'relationship_app/book_form.html', {'form': form})
+
+# Edit a book (Only for users with 'can_change_book' permission)
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'relationship_app/book_form.html', {'form': form})
+
+# Delete a book (Only for users with 'can_delete_book' permission)
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('list_books')
+    return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
