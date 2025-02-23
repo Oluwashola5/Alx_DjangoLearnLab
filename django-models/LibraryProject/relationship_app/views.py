@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 import os
 from django.conf import settings
+from django.contrib.auth import login, logout
+
 
 
 
@@ -196,3 +198,32 @@ def librarian_view(request):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'member_view.html')  # ✅ No "relationship_app/" prefix
+
+# User registration view
+def register_view(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("login")  # Redirect to login page after registration
+    else:
+        form = UserCreationForm()
+    return render(request, "register.html", {"form": form})  # ✅ Corrected path
+
+# User login view
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect("home")  # Redirect to home page after login
+    else:
+        form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})  # ✅ Corrected path
+
+# User logout view
+def logout_view(request):
+    logout(request)
+    return render(request, "logout.html")  # ✅ Corrected path
