@@ -209,7 +209,7 @@ def register_view(request):
             return redirect("login")  # Redirect to login page after registration
     else:
         form = UserCreationForm()
-    return render(request, "register.html", {"form": form})  # ✅ Corrected path
+    return render(request, "relationship_app/register.html", {"form": form})  # ✅ Corrected path
 
 # User login view
 def login_view(request):
@@ -221,9 +221,9 @@ def login_view(request):
             return redirect("home")  # Redirect to home page after login
     else:
         form = AuthenticationForm()
-    return render(request, "login.html", {"form": form})  # ✅ Corrected path
+    return render(request, "relationship_app/login.html", {"form": form})  # ✅ Corrected path
 
 # User logout view
 def logout_view(request):
     logout(request)
-    return render(request, "logout.html")  # ✅ Corrected path
+    return render(request, "relationship_app/logout.html")  # ✅ Corrected path
