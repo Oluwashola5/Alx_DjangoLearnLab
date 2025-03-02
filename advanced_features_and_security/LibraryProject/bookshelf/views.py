@@ -4,6 +4,7 @@ from .models import Book
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import BookForm
+from .forms import ExampleForm
 
 @permission_required('bookshelf.can_view', raise_exception=True)
 def view_books(request):
@@ -61,3 +62,11 @@ def add_book(request):
         form = BookForm()
 
     return render(request, "bookshelf/book_form.html", {"form": form})
+
+def example_view(request):
+    form = ExampleForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        # Process the form data
+        cleaned_data = form.cleaned_data
+        print(cleaned_data)  # Replace with actual processing logic
+    return render(request, "example_form.html", {"form": form})
