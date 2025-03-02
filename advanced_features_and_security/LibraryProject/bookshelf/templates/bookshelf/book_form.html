@@ -1,5 +1,5 @@
 <form method="POST">
     {% csrf_token %}
-    <input type="text" name="query">
-    <button type="submit">Submit</button>
+    {{ form.as_p }}  <!-- Secure form rendering -->
+    <button type="submit">Save</button>
 </form>

@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from .models import Book
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from .forms import BookForm
 
 @permission_required('bookshelf.can_view', raise_exception=True)
 def view_books(request):
@@ -35,3 +37,27 @@ def my_view(request):
     response["Content-Security-Policy"] = "default-src 'self'"
     return response
 # Create your views here.
+
+def add_book(request):
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("book_list")  # Redirect to book listing page
+    else:
+        form = BookForm()
+
+    return render(request, "bookshelf/book_form.html", {"form": form})
+from django.shortcuts import render, redirect
+from .forms import BookForm
+
+def add_book(request):
+    if request.method == "POST":
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("book_list")  # Redirect to book listing page
+    else:
+        form = BookForm()
+
+    return render(request, "bookshelf/book_form.html", {"form": form})
