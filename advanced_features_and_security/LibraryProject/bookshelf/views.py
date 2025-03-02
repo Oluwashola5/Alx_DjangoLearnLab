@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404
 from .models import Book
+from django.http import HttpResponse
 
 @permission_required('bookshelf.can_view', raise_exception=True)
 def view_books(request):
@@ -24,4 +25,13 @@ def delete_book(request, book_id):
     book.delete()
     return redirect('book_list')
 
+def search_books(request):
+    query = request.GET.get('search', '').strip()  # Trim spaces and handle empty input
+    books = Book.objects.filter(title__icontains=query)  # Secure ORM query
+    return render(request, 'bookshelf/book_list.html', {'books': books})
+
+def my_view(request):
+    response = HttpResponse("Secure Page")
+    response["Content-Security-Policy"] = "default-src 'self'"
+    return response
 # Create your views here.

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf',
     'relationship_app',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -49,9 +50,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "trusted-scripts.com") 
+CSP_STYLE_SRC = ("'self'", "trusted-styles.com") 
 
 TEMPLATES = [
     {
@@ -145,3 +151,27 @@ TEMPLATES = [
 AUTH_USER_MODEL = 'relationship_app.CustomUser'
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+# Ensure correct hosts are specified
+ALLOWED_HOSTS = ['yourdomain.com', 'localhost']
+
+# Security Headers
+SECURE_BROWSER_XSS_FILTER = True  # Prevents reflected XSS attacks
+X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Blocks MIME type sniffing
+
+# CSRF and Session Security
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookie is only sent over HTTPS
+
+# Secure HSTS Headers
+SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Content Security Policy (CSP) - reduces risk of XSS attacks
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "trusted-scripts.com")  # Allow scripts only from trusted sources
+CSP_STYLE_SRC = ("'self'", "trusted-styles.com")  # Allow styles only from trusted sources
