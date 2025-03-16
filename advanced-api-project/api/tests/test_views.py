@@ -73,3 +73,19 @@ class BookAPITestCase(TestCase):
         response = self.client.post(self.list_url, new_book_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+class BookAPITestCase(APITestCase):
+    def setUp(self):
+        # Create a test user
+        self.user = User.objects.create_user(username="testuser", password="password123")
+
+        # Log in the user
+        self.client.login(username="testuser", password="password123")
+
+        # Create a sample book for testing
+        self.book = Book.objects.create(title="Sample Book", publication_year=2023)
+
+    def test_create_book_authenticated(self):
+        """Test that an authenticated user can create a book"""
+        data = {"title": "New Book", "publication_year": 2024}
+        response = self.client.post("/books/", data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
