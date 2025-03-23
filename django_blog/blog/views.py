@@ -15,6 +15,20 @@ from django.urls import reverse_lazy
 from django.urls import reverse
 from .forms import CommentForm
 from django.views.generic.edit import CreateView
+from django.db.models import Q
+from django.views.generic import ListView
+from .models import Post
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = "blog/search_results.html"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        return Post.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct()
+
 
 @login_required
 def add_comment(request, post_id):

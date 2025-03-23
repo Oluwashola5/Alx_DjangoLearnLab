@@ -9,3 +9,12 @@
     </div>
 {% endfor %}
 {% endblock %}
+
+{% for post in post_list %}
+    <h2><a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></h2>
+    <p>Tags: 
+        {% for tag in post.tags.all %}
+            <a href="{% url 'tagged-posts' tag.slug %}">{{ tag.name }}</a>
+        {% endfor %}
+    </p>
+{% endfor %}
