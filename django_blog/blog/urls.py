@@ -31,9 +31,8 @@ urlpatterns = [
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"),
     path("post/<int:pk>/update/", PostUpdateView.as_view(), name="post-update"),  # ✅ Ensure this line exists
     path('post/<int:post_id>/comment/', add_comment, name='comment-add'),
-    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
     path('post/<int:post_id>/comment/new/', CommentCreateView.as_view(), name='comment-add'),
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
-    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment-add'),
 ]
