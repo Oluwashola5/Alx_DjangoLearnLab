@@ -1,4 +1,4 @@
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
@@ -8,6 +8,42 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .forms import CommentForm
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post-detail', pk=post_id)
+    else:
+        form = CommentForm()
+    return render(request, 'blog/comment_form.html', {'form': form})
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    fields = ['content']
+    template_name = 'blog/comment_form.html'
+
+    def get_queryset(self):
+        return Comment.objects.filter(author=self.request.user)
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+    success_url = reverse_lazy('post-list')
+
+    def get_queryset(self):
+        return Comment.objects.filter(author=self.request.user)
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)

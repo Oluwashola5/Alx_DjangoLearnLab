@@ -8,3 +8,22 @@
     <a href="{% url 'post-delete' post.pk %}">Delete</a>
 {% endif %}
 {% endblock %}
+
+
+{% for comment in post.comments.all %}
+    <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+    {% if user == comment.author %}
+        <a href="{% url 'comment-update' comment.pk %}">Edit</a>
+        <a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+    {% endif %}
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'comment-add' post.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+{% endif %}
