@@ -16,6 +16,7 @@ urlpatterns = [
     path("profile/", profile, name="profile"),
     path('search/', SearchResultsView.as_view(), name='search-results'),
     path('tags/<slug:tag_slug>/', TaggedPostListView.as_view(), name='tagged-posts'),
+    path("tags/<str:tag_name>/", PostByTagListView.as_view(), name="posts_by_tag"),
 ]
 
 
