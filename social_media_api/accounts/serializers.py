@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from posts.serializers import PostSerializer
 
 User = get_user_model()
 
@@ -31,3 +32,8 @@ class LoginSerializer(serializers.Serializer):
             token, _ = Token.objects.get_or_create(user=user)
             return {'user': user, 'token': token.key}
         raise serializers.ValidationError("Invalid credentials")
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
