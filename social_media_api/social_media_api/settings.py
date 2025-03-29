@@ -152,3 +152,4 @@ import os
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+PORT = os.getenv("PORT", "8000")
