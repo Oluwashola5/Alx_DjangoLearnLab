@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 User = get_user_model()
 
@@ -16,6 +18,10 @@ class Notification(models.Model):
     target = GenericForeignKey("target_content_type", "target_object_id")
     created_at = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
+
+class CustomUser(AbstractUser):
+    following = models.ManyToManyField("self", symmetrical=False, related_name="followers", blank=True)
+
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')

@@ -13,9 +13,24 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from .models import Post, Like
 from .serializers import PostSerializer, LikeSerializer
+from rest_framework import generics, permissions
+from django.contrib.auth import get_user_model
+from .models import Post
+from .serializers import PostSerializer
+
+User = get_user_model()
+
+class FollowedUsersPostsView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        following_users = user.following.all()  # Ensure this exists in your User model
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
+
 
 class LikePostAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
