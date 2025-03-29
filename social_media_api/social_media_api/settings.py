@@ -41,6 +41,14 @@ INSTALLED_APPS = [
     'posts',
 ]
 
+# Security settings for production
+SECURE_BROWSER_XSS_FILTER = True  # Enables the XSS filter in supported browsers
+X_FRAME_OPTIONS = 'DENY'  # Prevents clickjacking attacks
+SECURE_SSL_REDIRECT = True  # Redirects all HTTP traffic to HTTPS
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from MIME-type sniffing
+SESSION_COOKIE_SECURE = True  # Ensures session cookies are sent over HTTPS
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookies are sent over HTTPS
+
 DEBUG = False
 
 REST_FRAMEWORK = {
