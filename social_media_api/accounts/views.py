@@ -12,6 +12,15 @@ from django.shortcuts import get_object_or_404
 from .models import User
 from .models import Post
 
+from rest_framework import generics, permissions
+from .models import CustomUser
+from .serializers import CustomUserSerializer
+
+class UserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()  # Ensure this is included
+    serializer_class = CustomUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 class RegisterView(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
